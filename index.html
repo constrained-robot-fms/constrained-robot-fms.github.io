@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- --- Meta tags for social‑media previews (fill text only, assets will be added later) --- -->
+  <meta name="description" content="SpecDec introduces specification‑guided constrained decoding that guarantees robot foundation models satisfy Signal Temporal Logic (STL) constraints at inference time—no retraining required."/>
+  <meta property="og:title" content="Constrained Decoding for Robot Foundation Models"/>
+  <meta property="og:description" content="A runtime framework that provably aligns robot foundation‑model actions with formal safety specifications."/>
+  <meta property="og:url" content="https://example.com/specdec"/>
+  <meta property="og:image" content="static/images/banner_placeholder.png" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+
+  <meta name="twitter:title" content=" Constrained Decodingfor Robot Foundation Models"/>
+  <meta name="twitter:description" content="Specification‑guided decoding for safe, goal‑directed robot foundation models."/>
+  <meta name="twitter:image" content="static/images/twitter_banner_placeholder.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <!-- Keywords for indexing -->
+  <meta name="keywords" content="robotics foundation models, constrained decoding, signal temporal logic, safety, specification alignment"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <title>Constrained Decoding for Robot Foundation Models</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico"/>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="static/css/bulma.min.css"/>
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css"/>
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css"/>
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"/>
+  <link rel="stylesheet" href="static/css/index.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <style>
+    /* Adds 1.5 rem below every carousel image */
+    .results-carousel .item img,
+    .results-carousel .item video { margin-bottom: 5.5rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ---------- Hero ---------- -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Constrained Decoding for Robot Foundation Models</h1>
+
+            <!-- Anonymous authors; no identifying information -->
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Anonymous Authors</span>
+            </div>
+            <div class="is-size-6 publication-authors">
+              <span class="author-block">Under Review &nbsp;|&nbsp; 2025</span>
+            </div>
+
+            <!-- --- Links: PDFs / Code / arXiv (placeholders) --- -->
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="static/pdfs/paper.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/your-repo-here" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span><span>Code (coming soon)</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Teaser video ---------- -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="tree" autoplay controls muted loop height="100%" poster="">
+          <source src="static/videos/geofence.mp4" type="video/mp4"/>
+        </video>
+        <h2 class="subtitle has-text-centered">
+          SpecDec biases action selection on‑the‑fly so that robot trajectories provably satisfy user‑defined STL safety and mission constraints, no model fine‑tuning or retraining necessary. In this video, around 0:07 you see the constrained decoding restricting the model from entering the room due to the geofence specification. The model then finds an alternate route and explores other rooms before finding the target object that is an apple.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Abstract ---------- -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Recent advances in robotic foundation models enable end‑to‑end policies that map multimodal observations directly to action sequences. While these policies generalize across tasks, they lack explicit notions of safety and correctness. We introduce <em>SpecDec</em>, a constrained decoding framework that enforces Signal Temporal Logic (STL) specifications at inference time, guaranteeing that generated trajectories satisfy formal constraints without retraining and irrespective of the underlying model. Comprehensive experiments on state‑of‑the‑art navigation models demonstrate that specification‑guided decoding not only filters unsafe actions but can also condition generation, achieving high task success while provably adhering to safety rules.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Image carousel ---------- -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item">
+            <img src="static/images/cdstl.png" alt="Architecture"/>
+            <!--<h2 class="subtitle has-text-centered">Specification-aware decoding pipeline. An RGB view and natural-language goal are encoded and passed through a frozen robot foundation policy (e.g., SPOC/FlaRE), which proposes an action distribution. Our STL-robustness constrained decoder consults the rulebook on the left, reweights the candidate actions (inset: pink = original, green = safe-reweighted, red line = per-action robustness), and outputs only actions that satisfy all temporal-logic constraints. The resulting trajectory illustrated in Bird's Eye View on the right (orange) reaches the target objects (green circles) while steering clear of exclusion zones (red squares), yielding safety-compliant navigation without retraining.</h2> -->
+            <h2 class="subtitle has-text-centered">
+              An RGB view and natural-language goal are encoded and passed through a frozen robot foundation policy 
+              <span class="has-text-info">(e.g., SPOC / FlaRE)</span>, which proposes an action distribution. Our <strong class="has-text-danger">STL-robustness constrained decoder</strong> consults the rulebook on the left,
+              reweights the candidate actions based on logic satisfaction:
+              <span style="color: palevioletred;">pink</span> = original,
+              <span class="has-text-success">green</span> = safe-reweighted,
+              <span class="has-text-danger">red line</span> = per-action robustness.
+            
+              The resulting trajectory in the bird's-eye view 
+              <span style="color: orange;">(orange)</span> reaches the target objects 
+              <span class="has-text-success">(green circles)</span> while avoiding exclusion zones 
+              <span class="has-text-danger">(red squares)</span>, 
+              ensuring safety-compliant navigation without retraining.
+            </h2>
+          </div>
+          <div class="item item-video2">
+            <video id="video2" autoplay controls muted loop height="100%" poster="">
+              <source src="static/videos/masking.mp4" type="video/mp4"/>
+            </video>
+            <h2 class="subtitle has-text-centered">
+              <!-- <strong>STL-guided action evaluation and reweighting.</strong><br> -->
+              The <span style="color:orange;">orange bars</span> show the original action probabilities proposed by the foundation model.
+              Lighter bars represent previous-step probabilities, while darker bars depict the reweighted values after applying temporal logic constraints.
+              The final selected action is shown in <span class="has-text-success">green</span>, chosen for its safety and task alignment.
+              The red curve overlays the STL robustness score for each action, guiding the decoder away from unsafe candidates in real time.
+            </h2>
+          </div>
+          <div class="item">
+            <img src="static/images/fig_cd.png" alt="Multiple houses with avoidance"/>
+            <h2 class="subtitle has-text-centered">
+              Top-down views across indoor environments with SpecDec induced trajectories <span style="color:red;">Red circles</span> mark target objects, 
+              <span style="color:green;">green boxes</span> are avoid regions, and 
+              <span style="color:orange;">orange paths</span> show safe trajectories under constrained decoding.
+            </h2>
+          </div>
+          <!-- <div class="item">
+            <img src="static/images/carousel2.jpg" alt="Comparison of decoding strategies"/>
+            <h2 class="subtitle has-text-centered">SpecDec balances task success and safety better than filtering baselines.</h2>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- Presentation video ---------- -->
+  <!-- <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3">Video Presentation</h2>
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <div class="publication-video">
+              <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- ---------- Secondary video carousel ---------- -->
+  <!-- <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3">Additional Results</h2>
+        <div id="results-carousel" class="carousel results-carousel">
+          <div class="item item-video1">
+            <video id="video1" autoplay controls muted loop height="100%" poster="">
+              <source src="static/videos/carousel1.mp4" type="video/mp4"/>
+            </video>
+          </div>
+          <div class="item item-video2">
+            <video id="video2" autoplay controls muted loop height="100%" poster="">
+              <source src="static/videos/carousel2.mp4" type="video/mp4"/>
+            </video>
+          </div>
+          <div class="item item-video3">
+            <video id="video3" autoplay controls muted loop height="100%" poster="">
+              <source src="static/videos/carousel3.mp4" type="video/mp4"/>
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- ---------- Poster ---------- -->
+  <!-- <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title">Poster</h2>
+        <iframe src="static/pdfs/specdec_poster.pdf" width="100%" height="550"></iframe>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- ---------- BibTeX ---------- -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@inproceedings{specdec2025,
+  title     = { Constrained Decoding for Robot Foundation Models},
+  author    = {Anonymous Authors},
+  booktitle = {Under Submission},
+  year      = {2025}
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ---------- Footer ---------- -->
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>, adapted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page. Feel free to reuse the source; please credit the template creators in your footer. <br/>
+              Website content © 2025 — Released under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution‑ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
