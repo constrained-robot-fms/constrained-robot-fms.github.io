@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <!-- --- Meta tags for social‑media previews (fill text only, assets will be added later) --- -->
-  <meta name="description" content="SpecDec introduces specification‑guided constrained decoding that guarantees robot foundation models satisfy Signal Temporal Logic (STL) constraints at inference time—no retraining required."/>
-  <meta property="og:title" content="Constrained Decoding for Robot Foundation Models"/>
+  <meta name="description" content="SafeDec introduces specification‑guided constrained decoding that guarantees (modulo dynamics) that transformer based robot policies satisfy safety Signal Temporal Logic (STL) constraints at inference time—no retraining required."/>
+  <meta property="og:title" content="Constrained Decoding for transformer based robot policies"/>
   <meta property="og:description" content="A runtime framework that provably aligns robot foundation‑model actions with formal safety specifications."/>
-  <meta property="og:url" content="https://example.com/specdec"/>
+  <meta property="og:url" content="https://example.com/safedec"/>
   <meta property="og:image" content="static/images/banner_placeholder.png" />
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
 
-  <meta name="twitter:title" content=" Constrained Decodingfor Robot Foundation Models"/>
-  <meta name="twitter:description" content="Specification‑guided decoding for safe, goal‑directed robot foundation models."/>
+  <meta name="twitter:title" content="Constrained Decoding for transformer based robot policies"/>
+  <meta name="twitter:description" content="Specification‑guided decoding for safe, goal‑directed transformer based robot policies."/>
   <meta name="twitter:image" content="static/images/twitter_banner_placeholder.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
 
@@ -51,7 +51,7 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Constrained Decoding for Robot Foundation Models</h1>
+            <h1 class="title is-1 publication-title">Constrained Decoding for transformer based robot policies</h1>
 
             <!-- Anonymous authors; no identifying information -->
             <div class="is-size-5 publication-authors">
@@ -90,7 +90,7 @@
           <source src="static/videos/geofence.mp4" type="video/mp4"/>
         </video>
         <h2 class="subtitle has-text-centered">
-          SpecDec biases action selection on‑the‑fly so that robot trajectories provably satisfy user‑defined STL safety and mission constraints, no model fine‑tuning or retraining necessary. In this video, around 0:07 you see the constrained decoding restricting the model from entering the room due to the geofence specification. The model then finds an alternate route and explores other rooms before finding the target object that is an apple.
+          SafeDec biases action selection on‑the‑fly so that robot trajectories provably satisfy user‑defined STL safety and mission constraints, no model fine‑tuning or retraining necessary. In this video, around 0:07 you see the constrained decoding restricting the model from entering the room due to the geofence specification. The model then finds an alternate route and explores other rooms before finding the target object that is an apple.
         </h2>
       </div>
     </div>
@@ -104,7 +104,7 @@
           <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified">
             <p>
-              Recent advances in robotic foundation models enable end‑to‑end policies that map multimodal observations directly to action sequences. While these policies generalize across tasks, they lack explicit notions of safety and correctness. We introduce <em>SpecDec</em>, a constrained decoding framework that enforces Signal Temporal Logic (STL) specifications at inference time, guaranteeing that generated trajectories satisfy formal constraints without retraining and irrespective of the underlying model. Comprehensive experiments on state‑of‑the‑art navigation models demonstrate that specification‑guided decoding not only filters unsafe actions but can also condition generation, achieving high task success while provably adhering to safety rules.
+              Recent advances in transformer based models enable end‑to‑end policies that map multimodal observations directly to action sequences. While these policies generalize across tasks, they lack explicit notions of safety and correctness. We introduce <em>SafeDec</em>, a constrained decoding framework that enforces Signal Temporal Logic (STL) specifications at inference time, guaranteeing that generated trajectories satisfy formal constraints without retraining and irrespective of the underlying model. Comprehensive experiments on state‑of‑the‑art navigation models demonstrate that specification‑guided decoding not only filters unsafe actions but can also condition generation, achieving high task success while provably adhering to safety rules.
             </p>
           </div>
         </div>
@@ -118,10 +118,10 @@
       <div class="container">
         <div id="results-carousel" class="carousel results-carousel">
           <div class="item">
-            <img src="static/images/cdstl.png" alt="Architecture"/>
+            <img src="static/images/paper.png" alt="Architecture"/>
             <!--<h2 class="subtitle has-text-centered">Specification-aware decoding pipeline. An RGB view and natural-language goal are encoded and passed through a frozen robot foundation policy (e.g., SPOC/FlaRE), which proposes an action distribution. Our STL-robustness constrained decoder consults the rulebook on the left, reweights the candidate actions (inset: pink = original, green = safe-reweighted, red line = per-action robustness), and outputs only actions that satisfy all temporal-logic constraints. The resulting trajectory illustrated in Bird's Eye View on the right (orange) reaches the target objects (green circles) while steering clear of exclusion zones (red squares), yielding safety-compliant navigation without retraining.</h2> -->
             <h2 class="subtitle has-text-centered">
-              An RGB view and natural-language goal are encoded and passed through a frozen robot foundation policy 
+              An RGB view and natural-language goal are encoded and passed through a frozen transformer policy 
               <span class="has-text-info">(e.g., SPOC / FlaRE)</span>, which proposes an action distribution. Our <strong class="has-text-danger">STL-robustness constrained decoder</strong> consults the rulebook on the left,
               reweights the candidate actions based on logic satisfaction:
               <span style="color: palevioletred;">pink</span> = original,
@@ -141,7 +141,7 @@
             </video>
             <h2 class="subtitle has-text-centered">
               <!-- <strong>STL-guided action evaluation and reweighting.</strong><br> -->
-              The <span style="color:orange;">orange bars</span> show the original action probabilities proposed by the foundation model.
+              The <span style="color:orange;">orange bars</span> show the original action probabilities proposed by the transformer based robot policy.
               Lighter bars represent previous-step probabilities, while darker bars depict the reweighted values after applying temporal logic constraints.
               The final selected action is shown in <span class="has-text-success">green</span>, chosen for its safety and task alignment.
               The red curve overlays the STL robustness score for each action, guiding the decoder away from unsafe candidates in real time.
@@ -150,7 +150,7 @@
           <div class="item">
             <img src="static/images/fig_cd.png" alt="Multiple houses with avoidance"/>
             <h2 class="subtitle has-text-centered">
-              Top-down views across indoor environments with SpecDec induced trajectories <span style="color:red;">Red circles</span> mark target objects, 
+              Top-down views across indoor environments with SafeDec induced trajectories <span style="color:red;">Red circles</span> mark target objects, 
               <span style="color:green;">green boxes</span> are avoid regions, and 
               <span style="color:orange;">orange paths</span> show safe trajectories under constrained decoding.
             </h2>
@@ -220,8 +220,8 @@
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@inproceedings{specdec2025,
-  title     = { Constrained Decoding for Robot Foundation Models},
+      <pre><code>@inproceedings{safedec2025,
+  title     = {Constrained Decoding for transformer based robot policies},
   author    = {Anonymous Authors},
   booktitle = {Under Submission},
   year      = {2025}
