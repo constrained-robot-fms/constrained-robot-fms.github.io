@@ -2,35 +2,29 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <!-- --- Meta tags for social‑media previews (fill text only, assets will be added later) --- -->
-  <meta name="description" content="SafeDec introduces specification‑guided constrained decoding that guarantees (modulo dynamics) that transformer based robot policies satisfy safety Signal Temporal Logic (STL) constraints at inference time—no retraining required."/>
-  <meta property="og:title" content="Constrained Decoding for transformer based robot policies"/>
-  <meta property="og:description" content="A runtime framework that provably aligns robot foundation‑model actions with formal safety specifications."/>
-  <meta property="og:url" content="https://example.com/safedec"/>
-  <meta property="og:image" content="static/images/banner_placeholder.png" />
+  <meta name="description" content="SafeDec: a constrained decoding framework for autoregressive transformer-based robot navigation policies that enforces Signal Temporal Logic (STL) safety specifications at inference time without retraining."/>
+  <meta property="og:title" content="SafeDec: Constrained Decoding for Safe Autoregressive Generalist Robot Navigation Policies"/>
+  <meta property="og:description" content="A runtime constrained decoding framework that provably aligns robot navigation policy actions with formal STL safety specifications."/>
+  <meta property="og:url" content="https://parvkpr.github.io/safedec"/>
+  <meta property="og:image" content="static/images/paper.png"/>
   <meta property="og:image:width" content="1200"/>
   <meta property="og:image:height" content="630"/>
-
-  <meta name="twitter:title" content="Constrained Decoding for transformer based robot policies"/>
-  <meta name="twitter:description" content="Specification‑guided decoding for safe, goal‑directed transformer based robot policies."/>
-  <meta name="twitter:image" content="static/images/twitter_banner_placeholder.png"/>
+  <meta name="twitter:title" content="SafeDec: Constrained Decoding for Safe Robot Navigation Policies"/>
+  <meta name="twitter:description" content="Runtime STL-guided constrained decoding for safe, goal-directed autoregressive robot navigation policies."/>
+  <meta name="twitter:image" content="static/images/paper.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-
-  <!-- Keywords for indexing -->
-  <meta name="keywords" content="robotics foundation models, constrained decoding, signal temporal logic, safety, specification alignment"/>
+  <meta name="keywords" content="robot navigation, constrained decoding, signal temporal logic, safety, foundation models, transformer policies"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <title>Constrained Decoding for Robot Foundation Models</title>
+  <title>SafeDec: Constrained Decoding for Safe Robot Navigation Policies</title>
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico"/>
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet"/>
-
   <link rel="stylesheet" href="static/css/bulma.min.css"/>
   <link rel="stylesheet" href="static/css/bulma-carousel.min.css"/>
   <link rel="stylesheet" href="static/css/bulma-slider.min.css"/>
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"/>
   <link rel="stylesheet" href="static/css/index.css"/>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
@@ -38,212 +32,550 @@
   <script src="static/js/bulma-slider.min.js"></script>
   <script src="static/js/index.js"></script>
   <style>
-    /* Adds 1.5 rem below every carousel image */
     .results-carousel .item img,
     .results-carousel .item video { margin-bottom: 5.5rem; }
+    .comparison-table thead th { background-color: #363636 !important; color: #fff !important; }
+    .comparison-table td, .comparison-table th { vertical-align: middle; }
+    .method-box { background: #f5f5f5; border-radius: 8px; padding: 1.5rem; height: 100%; }
+    .method-box .title { margin-bottom: 0.75rem; }
+    .vis-pair { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .vis-pair figure { flex: 1 1 45%; max-width: 48%; text-align: center; }
+    .vis-pair figure img { width: 100%; border-radius: 6px; }
   </style>
 </head>
 <body>
 
-  <!-- ---------- Hero ---------- -->
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Constrained Decoding for transformer based robot policies</h1>
-
-            <!-- Anonymous authors; no identifying information -->
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">Anonymous Authors</span>
-            </div>
-            <div class="is-size-6 publication-authors">
-              <span class="author-block">Under Review &nbsp;|&nbsp; 2025</span>
-            </div>
-
-            <!-- --- Links: PDFs / Code / arXiv (placeholders) --- -->
-            <div class="column has-text-centered">
-              <div class="publication-links">
-                <span class="link-block">
-                  <a href="static/pdfs/paper.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
-                  </a>
-                </span>
-                <span class="link-block">
-                  <a href="https://github.com/your-repo-here" target="_blank" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon"><i class="fab fa-github"></i></span><span>Code (coming soon)</span>
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ---------- Teaser video ---------- -->
-  <section class="hero teaser">
+<!-- ==================== Hero ==================== -->
+<section class="hero">
+  <div class="hero-body">
     <div class="container is-max-desktop">
-      <div class="hero-body">
-        <video id="tree" autoplay controls muted loop height="100%" poster="">
-          <source src="static/videos/geofence.mp4" type="video/mp4"/>
-        </video>
-        <h2 class="subtitle has-text-centered">
-          SafeDec biases action selection on‑the‑fly so that robot trajectories provably satisfy user‑defined STL safety and mission constraints, no model fine‑tuning or retraining necessary. In this video, around 0:07 you see the constrained decoding restricting the model from entering the room due to the geofence specification. The model then finds an alternate route and explores other rooms before finding the target object that is an apple.
-        </h2>
-      </div>
-    </div>
-  </section>
-
-  <!-- ---------- Abstract ---------- -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
-          <div class="content has-text-justified">
-            <p>
-              Recent advances in transformer based models enable end‑to‑end policies that map multimodal observations directly to action sequences. While these policies generalize across tasks, they lack explicit notions of safety and correctness. We introduce <em>SafeDec</em>, a constrained decoding framework that enforces Signal Temporal Logic (STL) specifications at inference time, guaranteeing that generated trajectories satisfy formal constraints without retraining and irrespective of the underlying model. Comprehensive experiments on state‑of‑the‑art navigation models demonstrate that specification‑guided decoding not only filters unsafe actions but can also condition generation, achieving high task success while provably adhering to safety rules.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ---------- Image carousel ---------- -->
-  <section class="hero is-small">
-    <div class="hero-body">
-      <div class="container">
-        <div id="results-carousel" class="carousel results-carousel">
-          <div class="item">
-            <img src="static/images/paper.png" alt="Architecture"/>
-            <!--<h2 class="subtitle has-text-centered">Specification-aware decoding pipeline. An RGB view and natural-language goal are encoded and passed through a frozen robot foundation policy (e.g., SPOC/FlaRE), which proposes an action distribution. Our STL-robustness constrained decoder consults the rulebook on the left, reweights the candidate actions (inset: pink = original, green = safe-reweighted, red line = per-action robustness), and outputs only actions that satisfy all temporal-logic constraints. The resulting trajectory illustrated in Bird's Eye View on the right (orange) reaches the target objects (green circles) while steering clear of exclusion zones (red squares), yielding safety-compliant navigation without retraining.</h2> -->
-            <h2 class="subtitle has-text-centered">
-              An RGB view and natural-language goal are encoded and passed through a frozen transformer policy 
-              <span class="has-text-info">(e.g., SPOC / FlaRE)</span>, which proposes an action distribution. Our <strong class="has-text-danger">STL-robustness constrained decoder</strong> consults the rulebook on the left,
-              reweights the candidate actions based on logic satisfaction:
-              <span style="color: palevioletred;">pink</span> = original,
-              <span class="has-text-success">green</span> = safe-reweighted,
-              <span class="has-text-danger">red line</span> = per-action robustness.
-            
-              The resulting trajectory in the bird's-eye view 
-              <span style="color: orange;">(orange)</span> reaches the target objects 
-              <span class="has-text-success">(green circles)</span> while avoiding exclusion zones 
-              <span class="has-text-danger">(red squares)</span>, 
-              ensuring safety-compliant navigation without retraining.
-            </h2>
-          </div>
-          <div class="item item-video2">
-            <video id="video2" autoplay controls muted loop height="100%" poster="">
-              <source src="static/videos/masking.mp4" type="video/mp4"/>
-            </video>
-            <h2 class="subtitle has-text-centered">
-              <!-- <strong>STL-guided action evaluation and reweighting.</strong><br> -->
-              The <span style="color:orange;">orange bars</span> show the original action probabilities proposed by the transformer based robot policy.
-              Lighter bars represent previous-step probabilities, while darker bars depict the reweighted values after applying temporal logic constraints.
-              The final selected action is shown in <span class="has-text-success">green</span>, chosen for its safety and task alignment.
-              The red curve overlays the STL robustness score for each action, guiding the decoder away from unsafe candidates in real time.
-            </h2>
-          </div>
-          <div class="item">
-            <img src="static/images/fig_cd.png" alt="Multiple houses with avoidance"/>
-            <h2 class="subtitle has-text-centered">
-              Top-down views across indoor environments with SafeDec induced trajectories <span style="color:red;">Red circles</span> mark target objects, 
-              <span style="color:green;">green boxes</span> are avoid regions, and 
-              <span style="color:orange;">orange paths</span> show safe trajectories under constrained decoding.
-            </h2>
-          </div>
-          <!-- <div class="item">
-            <img src="static/images/carousel2.jpg" alt="Comparison of decoding strategies"/>
-            <h2 class="subtitle has-text-centered">SpecDec balances task success and safety better than filtering baselines.</h2>
-          </div> -->
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ---------- Presentation video ---------- -->
-  <!-- <section class="hero is-small is-light">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title is-3">Video Presentation</h2>
-        <div class="columns is-centered has-text-centered">
-          <div class="column is-four-fifths">
-            <div class="publication-video">
-              <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- ---------- Secondary video carousel ---------- -->
-  <!-- <section class="hero is-small">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title is-3">Additional Results</h2>
-        <div id="results-carousel" class="carousel results-carousel">
-          <div class="item item-video1">
-            <video id="video1" autoplay controls muted loop height="100%" poster="">
-              <source src="static/videos/carousel1.mp4" type="video/mp4"/>
-            </video>
-          </div>
-          <div class="item item-video2">
-            <video id="video2" autoplay controls muted loop height="100%" poster="">
-              <source src="static/videos/carousel2.mp4" type="video/mp4"/>
-            </video>
-          </div>
-          <div class="item item-video3">
-            <video id="video3" autoplay controls muted loop height="100%" poster="">
-              <source src="static/videos/carousel3.mp4" type="video/mp4"/>
-            </video>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- ---------- Poster ---------- -->
-  <!-- <section class="hero is-small is-light">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title">Poster</h2>
-        <iframe src="static/pdfs/specdec_poster.pdf" width="100%" height="550"></iframe>
-      </div>
-    </div>
-  </section> -->
-
-  <!-- ---------- BibTeX ---------- -->
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre><code>@inproceedings{safedec2025,
-  title     = {Constrained Decoding for transformer based robot policies},
-  author    = {Anonymous Authors},
-  booktitle = {Under Submission},
-  year      = {2025}
-}</code></pre>
-    </div>
-  </section>
-
-  <!-- ---------- Footer ---------- -->
-  <footer class="footer">
-    <div class="container">
       <div class="columns is-centered">
-        <div class="column is-8">
-          <div class="content">
-            <p>
-              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>, adapted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page. Feel free to reuse the source; please credit the template creators in your footer. <br/>
-              Website content © 2025 — Released under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution‑ShareAlike 4.0 International License</a>.
-            </p>
+        <div class="column has-text-centered">
+
+          <h1 class="title is-1 publication-title">SafeDec: Constrained Decoding for Safe Autoregressive Generalist Robot Navigation Policies</h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://parvkpr.github.io/">Parv Kapoor</a><sup>1</sup>,&nbsp;</span>
+            <span class="author-block"><a href="#">Akila Ganlath</a><sup>2</sup>,&nbsp;</span>
+            <span class="author-block"><a href="#">Michael Clifford</a><sup>2</sup>,&nbsp;</span>
+            <span class="author-block"><a href="https://www.cs.cmu.edu/~cliu6/" target="_blank">Changliu Liu</a><sup>1</sup>,&nbsp;</span>
+            <span class="author-block"><a href="https://theairlab.org/team/sebastian/" target="_blank">Sebastian Scherer</a><sup>1</sup>,&nbsp;</span>
+            <span class="author-block"><a href="https://eskang.github.io/" target="_blank">Eunsuk Kang</a><sup>1</sup></span>
           </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Carnegie Mellon University&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>2</sup>Toyota InfoTech Labs</span>
+          </div>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 0.75rem;">
+            <span class="is-size-5 publication-venue" style="font-weight: bold; color: #e07b39;">
+              Accepted to International Conference on Machine Learning (ICML), 2026
+            </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="static/pdfs/paper.pdf" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2509.01728" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/your-repo-here" target="_blank"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code (coming soon)</span>
+                </a>
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
+<!-- ==================== /Hero ==================== -->
+
+
+<!-- ==================== Teaser video ==================== -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay controls muted loop height="100%">
+        <source src="static/videos/geofence.mp4" type="video/mp4"/>
+      </video>
+      <h2 class="subtitle has-text-centered">
+        SafeDec biases action selection on-the-fly so that robot trajectories provably satisfy user-defined STL safety
+        and mission constraints&mdash;no model fine-tuning or retraining necessary. Around 0:07, constrained decoding
+        prevents the model from entering the room due to the geofence specification. The model then finds an alternate
+        route and explores other rooms before locating the target object (an apple).
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Teaser video ==================== -->
+
+
+<!-- ==================== Abstract ==================== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Recent advances in end-to-end, multi-task robot policies based on transformer models have demonstrated
+            impressive generalization to real-world embodied navigation tasks. Trained on vast datasets of simulated
+            and real-world trajectories, these policies map multimodal observations directly to action sequences for
+            physical execution. Despite promising real-world capabilities, these models are still data-driven and,
+            therefore, lack explicit notions of behavioral correctness — they cannot reliably enforce complex temporal
+            rules such as <em>"visit the charging dock before entering the storage room, and never re-enter the kitchen
+            once you have left it."</em> We address this gap by introducing <em>SafeDec</em>, a constrained decoding
+            framework for autoregressive, transformer-based robot navigation policies that enforces safety
+            specifications expressed as Signal Temporal Logic (STL) formulas. Our method ensures that generated actions
+            provably satisfy STL specifications under assumed dynamics at runtime without retraining while remaining
+            agnostic of the underlying policy. We evaluate SafeDec on tasks from the CHORES benchmark for
+            state-of-the-art embodied navigation policies across hundreds of procedurally generated environments and
+            show that our decoding-time interventions are useful not only for filtering unsafe actions but also for
+            conditional action generation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Abstract ==================== -->
+
+
+
+<!-- ==================== Method ==================== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">SafeDec</h2>
+    <div class="content has-text-justified">
+      <p>
+        We take the constrained-decoding principle and apply it to enforce safety specifications over state
+        trajectories. Safety rules are captured by <strong>Signal Temporal Logic (STL)</strong>, a language defined
+        over continuous signals from dynamical systems. SafeDec simulates candidate actions with an approximate
+        dynamics model and evaluates STL satisfaction in real time, directly inside the decoding loop.
+      </p>
+    </div>
+
+    <div class="has-text-centered" style="margin: 1.5rem 0;">
+      <figure>
+        <img src="https://parvkpr.github.io/assets/img/safedec.png"
+             alt="From token-space constraints to temporal STL constraints"
+             style="max-width: 85%; border-radius: 6px;"/>
+        <figcaption class="is-size-6 has-text-grey" style="margin-top: 0.75rem;">
+          In LLMs, constraints are syntactic and local; in RFMs, constraints are temporal and depend on
+          forward-simulated dynamics. SafeDec bridges the gap with STL-guided decoding.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 2rem;">
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">Hard Constrained Decoding (HCD)</h3>
+          <p>
+            If a candidate action's predicted next state would violate the STL spec &phi;, set its logit to
+            &minus;&infin; (zero probability) before softmax. This yields <strong>provable compliance</strong>
+            under the assumed dynamics model.
+          </p>
+        </div>
+      </div>
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">Robustness Constrained Decoding (RCD)</h3>
+          <p>
+            Compute the STL robustness score &rho; for each candidate's predicted successor state and convert it
+            to a weight that <strong>boosts safer actions and suppresses risky ones</strong> (tunable via &beta;).
+            Preserves task performance while greatly reducing violations.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="content has-text-centered" style="margin-top: 1.5rem;">
+      <p>
+        SafeDec is <strong>model-agnostic</strong>: it only needs (1) access to decoder logits and (2) an
+        approximate dynamics function. STL evaluation is done efficiently via
+        <a href="https://uw-ctrl.github.io/stlcg/" target="_blank">STLCG++</a> for real-time inference.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Method ==================== -->
+
+
+<!-- ==================== Specifications ==================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Safety Specifications</h2>
+    <div class="content has-text-justified">
+      <p>
+        SafeDec is evaluated on <strong>five safety specifications</strong> expressed as STL invariants,
+        spanning geofencing, avoidance, temporal ordering, conditional constraints, and
+        object-interaction safety. All specifications are enforced at runtime without any retraining.
+      </p>
+    </div>
+
+    <div class="columns is-multiline is-centered" style="margin-top: 1rem;">
+
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">&phi;<sub>avoid</sub> &mdash; Obstacle Avoidance</h3>
+          <p><strong>STL:</strong> <code>G(⋀ᵢ ¬Rᵢ)</code></p>
+          <p>The robot must <em>always</em> stay outside all designated unsafe regions throughout
+          the entire trajectory.</p>
+        </div>
+      </div>
+
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">&phi;<sub>geofence</sub> &mdash; Geofencing</h3>
+          <p><strong>STL:</strong> <code>G(⋁ᵢ Rᵢ)</code></p>
+          <p>The robot must <em>always</em> remain within at least one of the designated
+          safe/allowed regions.</p>
+        </div>
+      </div>
+
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">&phi;<sub>ordered</sub> &mdash; Ordered Visitation</h3>
+          <p><strong>STL:</strong> <code>G(¬R₂) ∨ (¬R₂ U R₁)</code></p>
+          <p>The robot must avoid region R₂ <em>until</em> it has first reached region R₁,
+          or avoid R₂ forever — enforcing a temporal ordering constraint on regions.</p>
+        </div>
+      </div>
+
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">&phi;<sub>no&ndash;return</sub> &mdash; No Re-entry</h3>
+          <p><strong>STL:</strong> <code>G(R₀ ⇒ G(¬R₀ ⇒ G ¬R₀))</code></p>
+          <p>Once the robot leaves region R₀, it may <em>never re-enter</em> — a conditional,
+          one-way constraint on previously visited areas.</p>
+        </div>
+      </div>
+
+      <div class="column is-5">
+        <div class="method-box">
+          <h3 class="title is-5">&phi;<sub>SafetyChores</sub> &mdash; Object Safety</h3>
+          <p><strong>Specs:</strong> <code>&phi;<sub>fragile</sub></code> &amp; <code>&phi;<sub>dangerous</sub></code></p>
+          <p>Evaluated on the <strong>SafetyChores</strong> benchmark: the robot must respect
+          fragile-object and dangerous-object constraints — ensuring safe interaction in
+          household environments.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- ==================== /Specifications ==================== -->
+
+
+<!-- ==================== Results carousel ==================== -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <img src="static/images/paper.png" alt="SafeDec architecture"/>
+          <h2 class="subtitle has-text-centered">
+            An RGB view and natural-language goal are passed through a frozen transformer policy
+            <span class="has-text-info">(e.g., SPOC / FLaRe)</span>, which proposes an action distribution.
+            The <strong class="has-text-danger">STL-robustness constrained decoder</strong> consults the rulebook,
+            reweighting candidate actions:
+            <span style="color:palevioletred;">pink</span> = original,
+            <span class="has-text-success">green</span> = safe-reweighted,
+            <span class="has-text-danger">red line</span> = per-action STL robustness.
+            The bird's-eye-view trajectory <span style="color:orange;">(orange)</span> reaches the target
+            <span class="has-text-success">(green circles)</span> while avoiding exclusion zones
+            <span class="has-text-danger">(red squares)</span>.
+          </h2>
+        </div>
+
+        <div class="item item-video2">
+          <video id="video-masking" autoplay controls muted loop height="100%">
+            <source src="static/videos/masking.mp4" type="video/mp4"/>
+          </video>
+          <h2 class="subtitle has-text-centered">
+            The <span style="color:orange;">orange bars</span> show original action probabilities proposed by the
+            policy. Lighter bars are previous-step probabilities; darker bars are reweighted values after applying
+            temporal logic constraints. The final selected action (shown in
+            <span class="has-text-success">green</span>) is chosen for safety and task alignment. The red curve
+            overlays the STL robustness score, guiding the decoder away from unsafe candidates in real time.
+          </h2>
+        </div>
+
+        <div class="item">
+          <img src="static/images/fig_cd.png" alt="Multi-environment SafeDec trajectories"/>
+          <h2 class="subtitle has-text-centered">
+            Top-down views across indoor environments with SafeDec-induced trajectories.
+            <span style="color:red;">Red circles</span> mark target objects,
+            <span style="color:green;">green boxes</span> are avoidance regions, and
+            <span style="color:orange;">orange paths</span> show safe trajectories under constrained decoding.
+          </h2>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Results carousel ==================== -->
+
+
+<!-- ==================== Qualitative Comparison ==================== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Sample Visualizations</h2>
+    <div class="content has-text-justified">
+      <p>
+        Each plot shows a bird's-eye view of trajectories starting from the white dot under the instruction
+        <em>"find a sofa."</em>  The unconstrained model passes through forbidden regions (red squares) on the way
+        to the goal. SafeDec modifies the trajectories to respect STL safety specifications while still reaching
+        the target.
+      </p>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 1rem;">
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/top_cd.gif"
+               alt="Base model behavior — top-down view"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6" style="margin-top:0.5rem;">
+            <strong>Base model:</strong> trajectory enters forbidden regions.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/top_down_cd.gif"
+               alt="SafeDec behavior — top-down view"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6" style="margin-top:0.5rem;">
+            <strong>SafeDec:</strong> trajectory avoids all forbidden regions while reaching the goal.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 1.5rem;">
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/fpv_no_cd.gif"
+               alt="FPV — base model"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6" style="margin-top:0.5rem;">
+            FPV &mdash; base model violating the constraint.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/fpv_cd.gif"
+               alt="FPV — SafeDec"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6" style="margin-top:0.5rem;">
+            FPV &mdash; SafeDec navigating safely.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Qualitative Comparison ==================== -->
+
+
+<!-- ==================== Results at a Glance ==================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results at a Glance</h2>
+    <div class="content has-text-justified">
+      <p>
+        Evaluated on hundreds of procedurally generated AI2-THOR scenes with three state-of-the-art policies
+        (SPOC, FLaRe, PoliFormer) across all five specifications. The figure below shows the average STL
+        satisfaction vs. task success rate aggregated across all five specs and all three policies.
+      </p>
+    </div>
+
+    <div class="has-text-centered" style="margin-top: 1rem;">
+      <figure>
+        <img src="static/images/resu_safedec.png" alt="SafeDec Tradeoff: STL satisfaction vs. task success rate"
+             style="max-width: 75%; border-radius: 6px;"/>
+        <figcaption class="is-size-6 has-text-grey" style="margin-top: 0.75rem;">
+          Average STL satisfaction vs. task success rate across all five specifications and three policies.
+          RCD achieves the best trade-off — high safety satisfaction while staying close to unconstrained
+          task performance. HCD and Filtering reach near-perfect STL satisfaction at a greater cost to
+          success rate.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Results at a Glance ==================== -->
+
+
+<!-- ==================== SafeVLA Comparison ==================== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Comparison with SafeVLA</h2>
+    <div class="content has-text-justified">
+      <p>
+        We evaluate SafeDec on the <strong>SafetyChores benchmark</strong> against ISA (SafeVLA), a safety-reinforcement-learning
+        baseline trained specifically to minimize constraint violations, using fragile-object and
+        dangerous-object STL specifications. Despite being entirely <strong>training-free</strong>,
+        SafeDec achieves competitive task performance while dramatically reducing safety cost.
+        Notably, pairing HCD with ISA reduces safety cost by an <strong>order of magnitude</strong>
+        (0.205 &rarr; 0.015) with only a modest 4.5% drop in success rate.
+      </p>
+    </div>
+
+    <div class="table-container" style="margin-top: 1rem;">
+      <table class="table is-bordered is-striped is-fullwidth comparison-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Cost &darr;</th>
+            <th>Success Rate (%) &uarr;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ISA (SafeVLA)</td>
+            <td>0.205</td>
+            <td>86.5</td>
+          </tr>
+          <tr>
+            <td><strong>ISA + HCD</strong></td>
+            <td><strong>0.015</strong></td>
+            <td>82.0</td>
+          </tr>
+          <tr>
+            <td><strong>ISA + RCD</strong></td>
+            <td><strong>0.060</strong></td>
+            <td><strong>86.0</strong></td>
+          </tr>
+          <tr>
+            <td>FLaRe</td>
+            <td>0.192</td>
+            <td>82.0</td>
+          </tr>
+          <tr>
+            <td><strong>FLaRe + HCD</strong></td>
+            <td><strong>0.115</strong></td>
+            <td>84.0</td>
+          </tr>
+          <tr>
+            <td><strong>FLaRe + RCD</strong></td>
+            <td>0.155</td>
+            <td>79.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content" style="margin-top: 1rem;">
+      <p class="is-size-6 has-text-grey has-text-centered">
+        Evaluated on the SafetyChores benchmark with fragile-object and dangerous-object specifications.
+        Cost is the safety violation metric (lower is better); SR is task success rate (higher is better).
+      </p>
+    </div>
+  </div>
+</section>
+<!-- ==================== /SafeVLA Comparison ==================== -->
+
+
+<!-- ==================== Ablations ==================== -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Ablations</h2>
+    <div class="content has-text-justified">
+      <p>
+        Since SafeDec assumes a simple unicycle dynamics model for state prediction, we evaluate the impact of
+        noisy dynamics on final STL satisfaction. We also sweep over the &beta; parameter for RCD, which controls
+        how much specification satisfaction is prioritized over task performance.
+      </p>
+    </div>
+
+    <div class="columns is-centered" style="margin-top: 1rem;">
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/ablation_dyn.png"
+               alt="Dynamics noise ablation"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6 has-text-grey" style="margin-top:0.5rem;">
+            STL satisfaction (%) for HCD and RCD under baseline vs. noisy dynamics across base models.
+            SafeDec degrades gracefully under dynamics noise.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="column is-5 has-text-centered">
+        <figure>
+          <img src="https://parvkpr.github.io/assets/img/ablation_beta.png"
+               alt="Beta ablation"
+               style="width:100%; border-radius:6px;"/>
+          <figcaption class="is-size-6 has-text-grey" style="margin-top:0.5rem;">
+            Effect of &beta; on success rate and STL satisfaction. For PoliFormer, both metrics improve until
+            &beta;&nbsp;=&nbsp;10; beyond that, safety continues to improve at the cost of task success.
+            The influence of &beta; is model-dependent, demonstrating a tunable safety&ndash;performance knob.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ==================== /Ablations ==================== -->
+
+
+<!-- ==================== BibTeX ==================== -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{kapoor2025safedec,
+  title   = {SafeDec: Constrained Decoding for Safe Autoregressive Generalist Robot Navigation Policies},
+  author  = {Kapoor, Parv and Ganlath, Akila and Clifford, Michael and Liu, Changliu and Scherer, Sebastian and Kang, Eunsuk},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2026}
+}</code></pre>
+  </div>
+</section>
+<!-- ==================== /BibTeX ==================== -->
+
+
+<!-- ==================== Footer ==================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the
+            <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>,
+            adapted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            Feel free to reuse the source; please credit the template creators in your footer.<br/>
+            Website content &copy; 2025 &mdash; Released under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ==================== /Footer ==================== -->
 
 </body>
 </html>
